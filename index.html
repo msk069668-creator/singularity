@@ -2,6 +2,7 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Singularity: Lua &amp; Luau obfuscation</title>
+<meta name="description" content="Lua and Luau obfuscation built on a real virtual machine. Ship the script, keep the source."><meta name="theme-color" content="#09090b">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -10,42 +11,44 @@ html{scroll-behavior:smooth;scroll-padding-top:calc(72px + env(safe-area-inset-t
 *{box-sizing:border-box;margin:0}
 body{background:var(--bg);color:var(--tx);font:400 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:inherit;text-decoration:none}:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
-.w{max-width:1000px;margin:0 auto;padding:0 24px}
+.w{max-width:1240px;margin:0 auto;padding:0 24px}
 nav{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top,0px);background:rgba(9,9,11,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--ln)}
-nav .w{display:flex;align-items:center;height:54px;gap:24px;max-width:1080px}
-.logo{display:flex;gap:10px;align-items:center;font-weight:600;letter-spacing:.14em;font-size:13px;margin-right:auto}
-.links{display:flex;gap:4px}.links a{padding:6px 12px;color:var(--mu);font-size:13px;transition:color .2s}.links a:hover{color:var(--tx)}
-.btn{display:inline-flex;align-items:center;height:40px;padding:0 20px;border-radius:4px;font-size:13.5px;font-weight:500;border:1px solid var(--ln2);background:var(--s2);color:var(--tx);cursor:pointer;transition:.25s;font-family:inherit}
+nav .w{display:flex;align-items:center;height:54px;gap:24px;max-width:1240px}
+.logo{display:flex;gap:10px;align-items:center;font-weight:600;letter-spacing:.1em;font-size:13px;margin-right:auto}
+.links{display:flex;gap:4px}.links a{padding:6px 12px;color:var(--mu);font-size:13px;transition:color .2s}.links a:hover,.links a.on{color:var(--tx)}
+.btn{display:inline-flex;align-items:center;height:40px;padding:0 20px;border-radius:7px;font-size:13.5px;font-weight:500;border:1px solid var(--ln2);background:var(--s2);color:var(--tx);cursor:pointer;transition:.25s;font-family:inherit}
 .btn:hover{border-color:#555a64}.btn.p{background:var(--tx);color:#0a0a0c;border-color:var(--tx)}.btn.p:hover{background:#fff}
 nav .btn{height:32px;padding:0 14px;font-size:13px}
-.hero{min-height:88vh;min-height:88svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:110px 24px 70px;background:radial-gradient(ellipse 50% 40% at 50% 0,rgba(169,200,245,.07),transparent)}
+.hero{min-height:88vh;min-height:88svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:116px 24px 76px;background:radial-gradient(ellipse 46% 38% at 50% 0,rgba(169,200,245,.045),transparent)}
 .tg{font:12px var(--mono);color:var(--dm)}
 .hero{position:relative;overflow:hidden}.hero>*:not(canvas){position:relative;z-index:1}
 .bgc{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
-main>section{position:relative}main>section:before{content:"";position:absolute;left:0;right:0;top:30px;height:520px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 45% 100% at var(--gx,15%) 0,rgba(169,200,245,.08),transparent)}main>section:nth-of-type(even):before{--gx:85%}
+main>section{position:relative}main>section:before{content:"";position:absolute;left:0;right:0;top:30px;height:460px;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 42% 100% at var(--gx,15%) 0,rgba(169,200,245,.045),transparent)}main>section:nth-of-type(even):before{--gx:85%}
 main>section:after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(169,200,245,.22) 50%,transparent)}main>section.end:after{display:none}
 canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:block}
 .tick{overflow:hidden;border-block:1px solid var(--ln);background:rgba(9,9,11,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .tick div{display:flex;width:max-content;animation:tk 70s linear infinite;font:12px var(--mono);color:var(--dm);padding:13px 0;white-space:nowrap}@keyframes tk{to{transform:translateX(-50%)}}
-.run{margin-top:48px;width:min(600px,100%);text-align:left;background:rgba(14,15,18,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--ln2);border-radius:4px;box-shadow:0 40px 80px -30px #000;overflow:hidden}
+.run{margin-top:48px;width:min(600px,100%);text-align:left;background:rgba(14,15,18,.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--ln2);border-radius:12px;box-shadow:0 40px 80px -30px #000;overflow:hidden}
 .rh{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--ln);align-items:center;font:11.5px var(--mono);color:var(--dm)}.rh i{width:8px;height:8px;border-radius:50%;background:var(--ln2)}.rh span{margin-left:8px}
 #rl{font:12.5px/1.85 var(--mono);padding:16px 18px;min-height:186px;color:var(--mu);white-space:pre;overflow-x:auto}#rl .o{color:#7bd88f}#rl b{color:var(--ac);font-weight:400}
 #rl u{display:inline-block;width:7px;height:14px;background:var(--ac);vertical-align:-2px;margin-left:1px;animation:cr 1s steps(2) infinite}@keyframes cr{50%{opacity:0}}
 .wm{background:linear-gradient(100deg,#8a929d 25%,#fff 47%,#8a929d 70%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 8s ease-in-out infinite}@keyframes sh{0%,100%{background-position:100% 0}50%{background-position:0 0}}
-.fig{border:1px solid var(--ln);border-radius:4px;background:radial-gradient(ellipse 60% 70% at 50% 40%,rgba(169,200,245,.06),transparent),radial-gradient(circle,#ffffff10 1px,transparent 1.3px) 0 0/22px 22px,var(--s1);overflow:hidden}.fig svg{display:block;width:100%;height:auto}
-.n rect{fill:var(--s2);stroke:var(--ln2);transition:.3s}.n text{fill:var(--mu);font:11px var(--mono);text-anchor:middle;transition:.3s}.n{cursor:pointer}.n.on rect{stroke:#5d7da8}.n.on text{fill:var(--tx)}.n.sel rect{stroke:var(--ac);fill:#16202e;filter:drop-shadow(0 0 9px rgba(169,200,245,.4))}
-.ed{fill:none;stroke:url(#eg);stroke-width:1.2}
-.det{display:flex;gap:16px;align-items:baseline;border-top:1px solid var(--ln);padding:16px 20px;background:var(--s1)}.det b{font:500 13px var(--mono);color:var(--ac);min-width:130px}.det span{color:var(--mu);font-size:14px}
-.two{display:grid;grid-template-columns:1.1fr .9fr;border:1px solid var(--ln);border-radius:4px;background:var(--s1)}.pad{padding:24px}
+.fig{border:1px solid var(--ln);border-radius:12px;background:radial-gradient(ellipse 60% 70% at 50% 40%,rgba(169,200,245,.06),transparent),radial-gradient(circle,#ffffff10 1px,transparent 1.3px) 0 0/22px 22px,var(--s1);overflow:hidden}.fig svg{display:block;width:100%;height:auto}
+.pfw{overflow-x:auto;scrollbar-width:thin}.pfw svg{min-width:780px}
+.n{cursor:pointer;outline:none}.n rect{fill:#0d0f14;stroke:#2f4160;stroke-width:1.2;transition:.3s}.n text{fill:#cfd6e2;font:500 13px var(--mono);text-anchor:middle;transition:.3s}
+.n:hover rect,.n:focus-visible rect{stroke:#6f8fbf}.n.sel rect{stroke:var(--ac);fill:#131c2b;filter:drop-shadow(0 0 10px rgba(169,200,245,.38))}.n.sel text{fill:#fff}
+.ed{fill:none;stroke:url(#eg);stroke-width:1.3}.pt{fill:#0d0f14;stroke:#7d9ccc;stroke-width:1.1}
+.det{display:grid;grid-template-columns:183px 1fr auto;gap:16px;align-items:baseline;border-top:1px solid var(--ln);padding:18px 24px;background:var(--s1)}.det b{font:500 14px var(--mono);color:var(--ac)}.det span{color:var(--mu);font-size:15px}.det em{font:12px var(--mono);color:var(--dm);font-style:normal}
+.two{display:grid;grid-template-columns:1.1fr .9fr;border:1px solid var(--ln);border-radius:12px;background:var(--s1)}.pad{padding:24px}
 .bm{margin-bottom:20px}.bm>span{font-size:13px;color:var(--mu)}
 .bl{display:grid;grid-template-columns:30px 1fr 48px;gap:10px;align-items:center;font:11.5px var(--mono);color:var(--dm);margin-top:7px}.bl i{display:block;height:5px;background:var(--s2);overflow:hidden}.bl u{display:block;height:100%;width:0;background:linear-gradient(90deg,#3b5578,var(--ac));transition:width 1.2s cubic-bezier(.2,.7,.2,1)}.in .bl u{width:var(--v)}
 #curve{stroke-dasharray:400;stroke-dashoffset:400;transition:stroke-dashoffset 1.8s ease .3s}.in #curve{stroke-dashoffset:0}
-@media(max-width:820px){.two{grid-template-columns:1fr}.det{flex-direction:column;gap:4px}}
+@media(max-width:820px){.two{grid-template-columns:1fr}.det{grid-template-columns:1fr;gap:4px}}
 .wm{font-size:clamp(48px,9vw,96px);font-weight:500;letter-spacing:-.045em;line-height:1;margin:18px 0 16px}
 .sub{color:var(--mu);font-size:17px;max-width:420px}.cta{display:flex;gap:10px;margin-top:30px;justify-content:center;flex-wrap:wrap}
-section{padding:110px 0 0}
-.sh{margin-bottom:36px}.ey{display:block;font:12px var(--mono);color:var(--dm);margin-bottom:10px}
-h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.025em;font-weight:500;line-height:1.2}.sh p{color:var(--mu);margin-top:8px}
+section{padding:124px 0 0}
+.sh{margin-bottom:46px}
+h2{font-size:clamp(30px,3.8vw,42px);letter-spacing:-.025em;font-weight:500;line-height:1.18}.sh p{color:var(--mu);margin-top:12px;font-size:16.5px;line-height:1.5;max-width:480px}
 .rv{opacity:0;transform:translateY(10px);transition:opacity .8s ease var(--d,0s),transform .8s ease var(--d,0s)}.rv.in{opacity:1;transform:none}
 .bento{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border:1px solid var(--ln);border-radius:4px;overflow:hidden}
 .cell{background:rgba(12,13,16,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:24px;min-height:210px;display:flex;flex-direction:column;transition:background .3s}.cell:hover{background:rgba(22,24,29,.9)}
@@ -54,31 +57,101 @@ h2{font-size:clamp(24px,3vw,30px);letter-spacing:-.025em;font-weight:500;line-he
 .row{display:flex;gap:16px;padding:7px 0;border-top:1px solid var(--ln)}.row span:first-child{color:var(--dm);width:60px}.row .op{color:var(--ac)}
 .chip{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--ln)}.chip b{font-weight:400;color:var(--tx);display:flex;gap:7px;align-items:center}.chip b:before{content:"";width:5px;height:5px;border-radius:50%;background:#7bd88f}
 .k{color:var(--ac)}.s{color:#e8c48d}.c{color:var(--dm)}
-.cmp{--p:50%;position:relative;border:1px solid var(--ln);border-radius:4px;background:var(--s1);overflow:hidden;font:12.5px/1.7 var(--mono)}
+.bento{border-radius:12px}.cell{position:relative;padding:32px;min-height:310px}.cell h3{font-size:18px;letter-spacing:-.01em}.cell p{font-size:15px;max-width:340px;margin-top:6px}.vis{padding-top:28px;font-size:14px}
+
+.cell.s2 .vis{display:flex;gap:48px;align-items:flex-end;justify-content:space-between}.rows{flex:1;max-width:480px}.rows .row{padding:12px 0}.rows .row span:first-child{width:84px}.rows .op{font-size:14px}
+.px{display:grid;grid-template-columns:repeat(10,13px);gap:3px}.px i{width:13px;height:13px;border-radius:2px;background:#131a26;transition:background .6s}.px i.a{background:#2c4569}.px i.b{background:var(--ac)}
+.uv{display:flex;gap:20px;align-items:center}.id{display:grid;grid-template-columns:repeat(5,22px);gap:4px;flex:none}.id i{height:22px;border-radius:5px;background:#101722;transition:background .5s}.id i.on{background:var(--ac)}#bf{font-weight:500;font-size:14px}
+.cb{border:1px solid var(--ln2);background:#0a0b0e;border-radius:6px;padding:16px 18px;font:14px var(--mono);color:var(--tx);white-space:nowrap;overflow:hidden}
+.chip{padding:12px 0}.chip span{color:var(--dm)}.chip b{font:500 14px var(--mono)}.chip b:before{width:6px;height:6px;box-shadow:0 0 8px #7bd88f}
+.stk{position:relative;display:flex;flex-direction:column;gap:13px;padding-top:4px}.stk:before{content:"";position:absolute;left:13px;top:17px;bottom:17px;width:1px;background:var(--ln2)}.sk{position:relative;display:flex;align-items:center;gap:14px}.sk i{width:27px;height:27px;border-radius:7px;background:#0e141f;border:1px solid var(--ln2);flex:none;transition:.4s}.sk b{font:500 13px var(--mono);color:var(--mu);font-weight:500;transition:.4s}.sk.hot i{background:#182840;border-color:var(--ac);box-shadow:0 0 0 4px rgba(169,200,245,.1)}.sk.hot b{color:var(--tx)}
+@media(max-width:820px){.cell{min-height:0}.cell.s2 .vis{flex-direction:column;align-items:stretch;gap:24px}.rows{max-width:none}}
+.cmp{--p:50%;position:relative;border:1px solid var(--ln);border-radius:12px;background:var(--s1);overflow:hidden;font:12.5px/1.7 var(--mono)}
 .cmp pre{margin:0;padding:46px 22px 24px;min-height:280px;white-space:pre-wrap;word-break:break-all;color:#c9cdd4;font:inherit}
 .cmp .r{position:absolute;inset:0;background:#0b0c0f;clip-path:inset(0 0 0 var(--p))}.cmp .r pre{color:#6d727c}
 .cmp .t{position:absolute;top:16px;left:22px;font-size:11px;color:var(--dm)}.cmp .r .t{left:auto;right:22px}
 .hd{position:absolute;top:0;bottom:0;left:var(--p);width:1px;background:var(--ac);pointer-events:none}
 .hd:after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:var(--bg);border:1px solid var(--ac);display:grid;place-items:center;color:var(--ac);font-size:12px}
-.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
-details{border-top:1px solid var(--ln)}details:last-child{border-bottom:1px solid var(--ln)}
-summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:17px 2px;font:13.5px var(--mono);transition:color .2s}summary::-webkit-details-marker{display:none}
-summary:after{content:"+";color:var(--dm);font-size:18px;transition:transform .3s}details[open] summary:after{transform:rotate(45deg);color:var(--ac)}summary:hover{color:var(--ac)}
-details p{padding:0 2px 18px;color:var(--mu);font-size:14px;max-width:520px}
+.cmp:focus-within{outline:2px solid var(--ac);outline-offset:3px}.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+details{border-top:1px solid var(--ln);transition:background .25s}details:last-child{border-bottom:1px solid var(--ln)}details[open]{background:rgba(169,200,245,.035)}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:19px 4px;font:14px var(--mono);color:var(--tx);transition:color .2s}summary::-webkit-details-marker{display:none}summary .fn{color:var(--ac)}summary .ar{color:var(--dm)}
+summary:after{content:"+";color:var(--dm);font-size:19px;flex:none;transition:transform .3s}details[open] summary:after{transform:rotate(45deg);color:var(--ac)}summary:hover .fn{color:#cfe0f9}
+details p{padding:0 4px 20px;color:var(--mu);font-size:14.5px;max-width:540px;line-height:1.55}
 .end{text-align:center;padding:140px 0 0}.end h2{font-size:clamp(26px,4vw,38px)}.end p{color:var(--mu);margin:10px 0 26px}
 footer{margin-top:110px;border-top:1px solid var(--ln);padding:44px 0 32px;color:var(--dm);font-size:13px}
 .fg{display:grid;grid-template-columns:1.6fr repeat(3,1fr);gap:28px}.fg h4{font:500 12px var(--mono);color:var(--tx);margin-bottom:12px}.fg a{display:block;color:var(--mu);padding:3px 0;transition:color .2s}.fg a:hover{color:var(--tx)}
 .cp{margin-top:36px;padding-top:18px;border-top:1px solid var(--ln);font-size:12px}
 @media(max-width:820px){.links{display:none}.bento,.fg{grid-template-columns:1fr}.cell.s2{grid-column:auto}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.rv{opacity:1;transform:none}}
+
+/* ===== polish layer: motion, depth, micro-interactions ===== */
+:root{--e:cubic-bezier(.22,1,.36,1);interpolate-size:allow-keywords}
+canvas.bgc,canvas.gl{background:var(--bg)}
+::selection{background:rgba(169,200,245,.28);color:#fff}
+html{scrollbar-width:thin;scrollbar-color:#2c2f36 var(--bg)}
+body{animation:pg 1s var(--e) both}@keyframes pg{from{opacity:0}}
+.sp{position:fixed;top:0;left:0;right:0;height:2px;z-index:30;pointer-events:none;transform-origin:0 50%;transform:scaleX(var(--sp,0));background:linear-gradient(90deg,transparent,var(--ac));box-shadow:0 0 12px rgba(169,200,245,.6)}
+nav{transition:background .5s var(--e),border-color .5s var(--e)}nav .w{transition:height .5s var(--e)}
+nav.sc{background:rgba(9,9,11,.88);border-bottom-color:var(--ln2)}nav.sc .w{height:48px}
+.logo svg{transition:transform 1s var(--e)}.logo:hover svg{transform:rotate(150deg)}
+.links a{position:relative;transition:color .3s var(--e)}
+.links a:after{content:"";position:absolute;left:12px;right:12px;bottom:1px;height:1px;background:var(--ac);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--e)}
+.links a:hover:after,.links a.on:after{transform:scaleX(1)}
+.btn{transition:transform .4s var(--e),background .3s var(--e),border-color .3s var(--e),box-shadow .4s var(--e),color .3s}
+.btn:hover{transform:translateY(-1px);background:#1b1d23}.btn.p:hover{background:#fff;box-shadow:0 10px 30px -10px rgba(169,200,245,.55)}
+.btn:active{transform:translateY(0) scale(.97);transition-duration:.12s}
+.tg{display:inline-flex;align-items:center;gap:9px;padding:5px 13px 5px 11px;border:1px solid var(--ln2);border-radius:99px;background:rgba(14,15,18,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--mu)}
+.tg:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ac);animation:pl 2.4s ease-in-out infinite}
+@keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(169,200,245,.5)}60%{box-shadow:0 0 0 7px rgba(169,200,245,0)}}
+.hero>*:not(canvas){transform:translateY(calc(var(--hy,0)*1px));opacity:var(--ho,1)}
+.hero>.tg,.hero>.sub,.hero>.cta,.hero>.run{animation:up 1.2s var(--e) backwards}
+.hero>.tg{animation-delay:.05s}.hero>.sub{animation-delay:.3s}.hero>.cta{animation-delay:.42s}.hero>.run{animation-delay:.56s}
+.hero>.wm{animation:sh 8s ease-in-out infinite,up 1.3s var(--e) .15s backwards}
+@keyframes up{from{opacity:0;transform:translateY(24px)}}
+.run{transition:border-color .6s var(--e),box-shadow .6s var(--e)}.run:hover{border-color:#3a3e48;box-shadow:0 40px 90px -30px #000,0 0 60px -30px rgba(169,200,245,.35)}
+.run:before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(169,200,245,.5),transparent);pointer-events:none}
+.rh i:first-child{background:#3a4a63}
+.tick:hover div{animation-play-state:paused}
+.rv{transform:translateY(22px);transition:opacity 1s var(--e) var(--d,0s),transform 1.2s var(--e) var(--d,0s)}
+.cell.rv{transition:opacity 1s var(--e) var(--d,0s),transform 1.2s var(--e) var(--d,0s),background .5s var(--e)}
+.cell:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s var(--e);background:radial-gradient(380px circle at var(--mx,50%) var(--my,50%),rgba(169,200,245,.09),transparent 65%)}
+.cell:hover:after{opacity:1}
+.cell h3{transition:color .3s}.cell:hover h3{color:#fff}
+.px i{transition:background .8s var(--e)}.id i{transition:background .6s var(--e)}
+.sk i,.sk b{transition:all .6s var(--e)}
+.fig,.two,.cmp{transition:border-color .6s var(--e)}.fig:hover,.two:hover,.cmp:hover{border-color:var(--ln2)}
+.n{opacity:0;transition:opacity .8s var(--e)}.n.on{opacity:1}
+.n rect{transition:stroke .4s var(--e),fill .4s var(--e),filter .5s var(--e)}.n text{transition:fill .4s var(--e)}
+.det.sw>*{animation:sw .6s var(--e) backwards}.det.sw>span{animation-delay:.05s}.det.sw>em{animation-delay:.1s}
+@keyframes sw{from{opacity:0;transform:translateY(6px)}}
+.hd{box-shadow:0 0 14px rgba(169,200,245,.35)}.hd:after{transition:box-shadow .4s var(--e),background .3s;box-shadow:0 0 0 0 rgba(169,200,245,0)}
+.cmp:hover .hd:after,.cmp:focus-within .hd:after{box-shadow:0 0 0 7px rgba(169,200,245,.1),0 0 24px rgba(169,200,245,.3);background:#10151d}
+.bl i,.bl u{border-radius:9px}.bl u{transition:width 1.5s var(--e) .25s;box-shadow:0 0 14px rgba(169,200,245,.22)}
+.bl:nth-of-type(2) u{transition-delay:.4s}.bl:nth-of-type(3) u{transition-delay:.55s}
+#curve{transition:stroke-dashoffset 2.2s var(--e) .3s}
+details::details-content{block-size:0;overflow:hidden;transition:block-size .5s var(--e),content-visibility .5s allow-discrete}
+details[open]::details-content{block-size:auto}
+details[open] p{animation:dn .6s var(--e) both}@keyframes dn{from{opacity:0;transform:translateY(-6px)}}
+summary{transition:color .3s var(--e),padding .5s var(--e)}summary:hover{padding-left:12px}
+summary:after{transition:transform .5s var(--e),color .3s}
+.end .w{position:relative}.end .w:before{content:"";position:absolute;left:50%;top:48%;width:560px;max-width:100%;height:280px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(169,200,245,.09),transparent);pointer-events:none;z-index:-1}
+.fg a{transition:color .3s var(--e),transform .5s var(--e)}.fg a:hover{transform:translateX(4px)}
+@media(prefers-reduced-motion:reduce){body{animation:none}.hero>*{animation:none!important}.tick div,.wm{animation:none!important}.n{opacity:1}.sp{display:none}.hero>*:not(canvas){transform:none;opacity:1}}
+
+/* ===== cursor lens: scrambling hex field that shines around the pointer ===== */
+.lens{position:fixed;inset:0;width:100%;height:100%;z-index:24;pointer-events:none;display:block}
+.cur{position:fixed;left:0;top:0;z-index:25;pointer-events:none;padding:3px 8px;border:1px solid rgba(169,200,245,.28);border-radius:99px;background:rgba(9,9,11,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font:11px/1.4 var(--mono);color:var(--ac);white-space:nowrap;opacity:0;transition:opacity .5s var(--e);box-shadow:0 0 18px -4px rgba(169,200,245,.45)}
+.cur.on{opacity:1}
+@media(hover:none),(prefers-reduced-motion:reduce){.lens,.cur{display:none}}
 </style></head><body>
 <canvas class="bgc" id="bgc" aria-hidden="true"></canvas>
+<canvas class="lens" id="lens" aria-hidden="true"></canvas><div class="cur" id="cur" aria-hidden="true"></div>
 <nav><div class="w">
 <a class="logo" href="#top"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="2.4" fill="#a9c8f5"/><ellipse cx="11" cy="11" rx="9.5" ry="4" stroke="#585c64" transform="rotate(-30 11 11)"/><ellipse cx="11" cy="11" rx="9.5" ry="4" stroke="#585c64" transform="rotate(30 11 11)"/></svg>SINGULARITY</a>
 <div class="links"><a href="#protection">protection</a><a href="#engine">engine</a><a href="#output">output</a><a href="#tradeoffs">tradeoffs</a><a href="#directives">directives</a></div>
 <a class="btn p" href="#cta">Get started</a></div></nav>
 
-<header class="hero" id="top"><canvas class="gl" id="g1" aria-hidden="true"></canvas><span class="tg">lua · luau obfuscation</span>
+<header class="hero" id="top"><canvas class="gl" id="g1" aria-hidden="true"></canvas><span class="tg">For Lua and Luau scripts</span>
 <h1 class="wm">Singularity</h1>
 <p class="sub">Ship the script. Keep the source.</p>
 <div class="cta"><a class="btn p" href="#cta">Get started</a><a class="btn" href="#directives">Read the docs</a></div>
@@ -86,34 +159,34 @@ footer{margin-top:110px;border-top:1px solid var(--ln);padding:44px 0 32px;color
 <div class="tick" aria-hidden="true"><div id="tk"></div></div>
 
 <main>
-<section id="protection"><div class="w"><div class="sh rv"><span class="ey">product</span><h2>Protection</h2><p>The engine behind the scripts you ship.</p></div>
+<section id="protection"><div class="w"><div class="sh rv"><h2>Protection</h2><p>The engine behind the scripts you ship.</p></div>
 <div class="bento">
-<div class="cell s2 rv"><h3>Virtualization</h3><p>Each build runs in its own instruction set.</p><div class="vis"><div class="row"><span>build 01</span><span class="op"></span></div><div class="row"><span>build 02</span><span class="op"></span></div><div class="row"><span>build 03</span><span class="op"></span></div></div></div>
-<div class="cell rv"><h3>Unique builds</h3><p>Keys, handlers and layouts change on each compile.</p><div class="vis"><div class="c">"private value"</div><div class="c" style="padding:4px 0">↓</div><div id="bf" style="color:var(--tx)"></div></div></div>
-<div class="cell rv"><h3>Encrypted constants</h3><p>Strings and bytecode stay protected until needed.</p><div class="vis"><span class="k">local</span> key = <span class="s" id="kf">"A1-77"</span></div></div>
+<div class="cell s2 rv"><h3>Virtualization</h3><p>Each build runs in its own instruction set.</p><div class="vis"><div class="rows"><div class="row"><span>build 01</span><span class="op"></span></div><div class="row"><span>build 02</span><span class="op"></span></div><div class="row"><span>build 03</span><span class="op"></span></div></div><div class="px" id="px" aria-hidden="true"></div></div></div>
+<div class="cell rv"><h3>Unique builds</h3><p>Keys, handlers and layouts change on each compile.</p><div class="vis uv"><div class="id" id="id" aria-hidden="true"></div><div><div class="c">"private value"</div><div class="c" style="padding:4px 0">↓</div><div id="bf" style="color:var(--tx)"></div></div></div></div>
+<div class="cell rv"><h3>Encrypted constants</h3><p>Strings and bytecode stay protected until needed.</p><div class="vis"><div class="cb"><span class="k">local</span> key = <span class="s" id="kf">"A1-77"</span></div></div></div>
 <div class="cell rv"><h3>Built for Luau</h3><p>Closures, callbacks, tables and Roblox runtimes.</p><div class="vis"><div class="chip"><span>bytecode vm</span><b>ready</b></div><div class="chip"><span>string encryption</span><b>ready</b></div><div class="chip"><span>tamper checks</span><b>ready</b></div></div></div>
-<div class="cell rv"><h3>Layered protection</h3><p>Different defenses, one build.</p><div class="vis"><div class="row"><span>layer 1</span><span>virtual machine</span></div><div class="row"><span>layer 2</span><span>encryption</span></div><div class="row"><span>layer 3</span><span>integrity</span></div></div></div>
+<div class="cell rv"><h3>Layered protection</h3><p>Different defenses, one build.</p><div class="vis stk"><div class="sk" data-k="0"><i aria-hidden="true"></i><b>virtual machine</b></div><div class="sk" data-k="1"><i aria-hidden="true"></i><b>encryption</b></div><div class="sk" data-k="2"><i aria-hidden="true"></i><b>integrity</b></div></div></div>
 </div></div></section>
 
-<section id="engine"><div class="w"><div class="sh rv"><span class="ey">engine</span><h2>From source to private bytecode</h2><p>Select a stage to inspect it.</p></div>
-<div class="fig rv" id="pf"><svg id="psvg" viewBox="0 0 940 240" role="img" aria-label="Compiler pipeline graph"></svg><div class="det"><b id="dt"></b><span id="dd"></span></div></div></div></section>
+<section id="engine"><div class="w"><div class="sh rv"><h2>From source to private bytecode</h2><p>Select a stage to inspect it.</p></div>
+<div class="fig rv" id="pf"><div class="pfw"><svg id="psvg" viewBox="0 0 1190 304" role="group" aria-label="Compiler pipeline. Select a stage to inspect it."></svg></div><div class="det" aria-live="polite"><b id="dt"></b><span id="dd"></span><em id="do"></em></div></div></div></section>
 
-<section id="output"><div class="w"><div class="sh rv"><span class="ey">output</span><h2>See the difference</h2><p>The same script, before and after protection.</p></div>
-<div class="cmp rv" id="cmp"><div class="l"><span class="t">source · check.luau</span><pre id="cs"></pre></div><div class="r"><span class="t">protected · excerpt</span><pre id="cq"></pre></div><div class="hd"></div><input type="range" min="0" max="100" value="50" aria-label="Compare source and protected output"></div></div></section>
+<section id="output"><div class="w"><div class="sh rv"><h2>See the difference</h2><p>The same script, before and after protection.</p></div>
+<div class="cmp rv" id="cmp"><div class="l"><span class="t">source: check.luau</span><pre id="cs"></pre></div><div class="r"><span class="t">protected: excerpt</span><pre id="cq"></pre></div><div class="hd"></div><input type="range" min="0" max="100" value="50" aria-label="Compare source and protected output"></div></div></section>
 
-<section id="tradeoffs"><div class="w"><div class="sh rv"><span class="ey">tradeoffs</span><h2>Choose your level</h2><p>Stronger protection costs size and CPU. Illustrative figures for a mid-sized script.</p></div>
+<section id="tradeoffs"><div class="w"><div class="sh rv"><h2>Choose your level</h2><p>Stronger protection costs size and CPU. Illustrative figures for a mid-sized script.</p></div>
 <div class="two rv"><div class="pad" id="bm"></div><div class="pad" style="border-left:1px solid var(--ln)"><div style="font-size:13px;color:var(--mu);margin-bottom:8px">Analysis effort vs runtime cost</div>
 <svg viewBox="0 0 320 220" style="width:100%"><path d="M34 190H310M34 190V10" stroke="#2c2f36" fill="none"/><g fill="#585c64" font-family="Geist Mono" font-size="10"><text x="34" y="208">0%</text><text x="270" y="208">+45%</text><text x="2" y="14">high</text><text x="8" y="190">low</text></g>
 <path d="M34 190 C60 140,70 120,95 118 S200 60,285 22" id="curve" fill="none" stroke="#a9c8f5" stroke-width="1.5"/><g fill="#09090b" stroke="#a9c8f5"><circle cx="60" cy="150" r="4"/><circle cx="130" cy="95" r="4"/><circle cx="285" cy="22" r="4"/></g><g fill="#8d9199" font-family="Geist Mono" font-size="10"><text x="68" y="168">L1</text><text x="138" y="113">L2</text><text x="258" y="44">L3</text></g></svg></div></div></div></section>
 
-<section id="directives"><div class="w"><div class="sh rv"><span class="ey">developer controls</span><h2>Make it yours</h2><p>Fine-grained directives for the compiler.</p></div>
+<section id="directives"><div class="w"><div class="sh rv"><h2>Make it yours</h2><p>Fine-grained directives for the compiler.</p></div>
 <div class="rv">
-<details><summary>SING_SECURE("text")</summary><p>Keep a single string encrypted until the moment it is used.</p></details>
-<details><summary>SING_NO_VM(fn)</summary><p>Exclude a function from virtualization. Useful for hot paths.</p></details>
-<details><summary>SING_JUNK()</summary><p>Insert harmless decoy code at this location.</p></details>
-<details><summary>SING_TAMPER_CRASH()</summary><p>Stop execution when the script has been modified.</p></details>
-<details><summary>SING_RELEASE</summary><p>A boolean that is true only in protected builds, so development code stays separate.</p></details>
-<details><summary>SING_BUILD_ID</summary><p>An identifier shared by every use within the same build.</p></details></div></div></section>
+<details open><summary><span><span class="fn">SING_SECURE</span><span class="ar">("text")</span></span></summary><p>Keep a single string encrypted until the moment it is used.</p></details>
+<details><summary><span><span class="fn">SING_NO_VM</span><span class="ar">(fn)</span></span></summary><p>Exclude a function from virtualization. Useful for hot paths.</p></details>
+<details><summary><span><span class="fn">SING_JUNK</span><span class="ar">()</span></span></summary><p>Insert harmless decoy code at this location.</p></details>
+<details><summary><span><span class="fn">SING_TAMPER_CRASH</span><span class="ar">()</span></span></summary><p>Stop execution when the script has been modified.</p></details>
+<details><summary><span class="fn">SING_RELEASE</span></summary><p>A boolean that is true only in protected builds, so development code stays separate.</p></details>
+<details><summary><span class="fn">SING_BUILD_ID</span></summary><p>An identifier shared by every use within the same build.</p></details></div></div></section>
 
 <section class="end" id="cta"><div class="w rv"><h2>Ship the script. Keep the source.</h2><p>Your Luau, your build, your protection.</p><a class="btn p" href="#top">Get started</a></div></section>
 </main>
@@ -132,8 +205,13 @@ function scr(el,t,d=600){cancelAnimationFrame(el._r);if(RM){el.textContent=t;ret
 const OP=['JMP','XOR','MOV','ADD','CALL','SHL','SUB'],pk=a=>a[Math.random()*a.length|0],hx=n=>'0x'+(Math.random()*16**n|0).toString(16).toUpperCase().padStart(n,'0');
 const by=()=>Array.from({length:4},()=>'\\x'+hx(2).slice(2)).join('');
 const ops=()=>$$('.op').forEach(e=>scr(e,`${hx(2)} ${pk(OP)} r${Math.random()*12|0}, ${hx(2)}`));
-let ki=0;ops();$('#bf').textContent=by();
-setInterval(()=>{ops();scr($('#bf'),by());ki^=1;scr($('#kf'),ki?'D("\\x9c\\x1e\\x77\\xa4")':'"A1-77"')},3200);
+const px=$('#px'),pc=[];for(let i=0;i<60;i++){const e=document.createElement('i');px.appendChild(e);pc.push(e)}
+function pix(){pc.forEach(e=>{const r=Math.random();e.className=r<.1?'b':r<.4?'a':''})}
+const idg=$('#id'),ic=[];for(let i=0;i<25;i++){const e=document.createElement('i');idg.appendChild(e);ic.push(e)}
+function idn(){for(let r=0;r<5;r++)for(let c=0;c<3;c++){const on=Math.random()<.55?'on':'';ic[r*5+c].className=on;ic[r*5+4-c].className=on}}
+if(!RM){setInterval(()=>{if(!document.hidden)for(let k=0;k<4;k++){const e=pk(pc),r=Math.random();e.className=r<.15?'b':r<.5?'a':''}},320);let li=0;setInterval(()=>{$$('.sk').forEach(p=>p.classList.toggle('hot',+p.dataset.k==li));li=(li+1)%3},1400)}
+let ki=0;ops();$('#bf').textContent=by();pix();idn();
+setInterval(()=>{ops();pix();idn();scr($('#bf'),by());ki^=1;scr($('#kf'),ki?'D("\\x9c\\x1e\\x77\\xa4")':'"A1-77"')},3200);
 /* shader: photon ring and warped grid behind the wordmark */
 const VS='attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}',FS=`precision highp float;uniform vec2 R,M;uniform float T;
 float hs(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
@@ -169,9 +247,9 @@ float mj=1.-step(.5,mod(floor(k+.5),5.));
 float sw=exp(-pow((h-.5-.16*sin(T*.12))*9.,2.));
 float m=.3+.7*smoothstep(.1,.9,abs(uv.x-.5)*2.);
 vec3 c=vec3(.035,.035,.043)+h*.025;
-c+=vec3(.55,.7,.95)*line*(.05+.17*mj)*(1.+2.2*sw)*m;
-c+=vec3(.5,.68,1.)*sw*.03*m;
-c+=step(.9985,hs(floor(gl_FragCoord.xy/1.5)))*(.3+.3*sin(T*2.+hs(uv)*30.))*.45;
+c+=vec3(.55,.7,.95)*line*(.03+.1*mj)*(1.+1.5*sw)*m;
+c+=vec3(.5,.68,1.)*sw*.016*m;
+c+=step(.999,hs(floor(gl_FragCoord.xy/1.5)))*(.22+.22*sin(T*2.+hs(uv)*30.))*.3;
 c*=1.-.4*length(uv-.5);gl_FragColor=vec4(c,1.);}`;
 const mk=(t,s)=>{const x=g.createShader(t);g.shaderSource(x,s);g.compileShader(x);return x},p=g.createProgram();
 g.attachShader(p,mk(g.VERTEX_SHADER,'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}'));g.attachShader(p,mk(g.FRAGMENT_SHADER,F));g.linkProgram(p);if(!g.getProgramParameter(p,g.LINK_STATUS))return;g.useProgram(p);
@@ -179,20 +257,23 @@ g.bindBuffer(g.ARRAY_BUFFER,g.createBuffer());g.bufferData(g.ARRAY_BUFFER,new Fl
 const U=n=>g.getUniformLocation(p,n);let y=scrollY;
 const size=()=>{const d=Math.min(devicePixelRatio||1,1.25);cv.width=innerWidth*d;cv.height=innerHeight*d;g.viewport(0,0,cv.width,cv.height)};
 const draw=t=>{y+=(scrollY-y)*.08;g.uniform2f(U('R'),cv.width,cv.height);g.uniform1f(U('T'),t/1000);g.uniform1f(U('Y'),y);g.drawArrays(g.TRIANGLES,0,3)};
-const fr=t=>{draw(t);requestAnimationFrame(fr)};size();addEventListener('resize',()=>{size();if(RM)draw(3000)});if(RM)draw(3000);else requestAnimationFrame(fr)})();
+let fk=0;const fr=t=>{if(!document.hidden&&(fk^=1))draw(t);requestAnimationFrame(fr)};size();addEventListener('resize',()=>{size();if(RM)draw(3000)});if(RM)draw(3000);else requestAnimationFrame(fr)})();
 /* pipeline */
-const N=[['Source',70,120,'Lua 5.1 and Luau, including type annotations and compound assignment.'],['Parse',215,120,'Builds a full syntax tree. Nothing is matched with patterns or regex.'],['Lower to IR',360,120,'Converts the tree to a typed intermediate form that every later pass shares.'],['Rename',535,36,'Replaces identifiers with scoped, seed-derived names.'],['Encrypt strings',535,120,'Encrypts literals at build time with a per-build key schedule.'],['Flatten flow',535,204,'Routes basic blocks through a dispatcher with opaque state values.'],['Bytecode',710,120,'Emits a custom instruction set with a shuffled opcode table.'],['Runtime VM',865,120,'A compact interpreter generated with the bytecode. Pure Luau, no native dependencies.']];
-const E=[[0,1],[1,2],[2,3],[2,4],[2,5],[3,6],[4,6],[5,6],[6,7]],ps=$('#psvg');let h='<defs><linearGradient id="eg" x1="0" x2="1"><stop offset="0" stop-color="#2c2f36"/><stop offset="1" stop-color="#5a80b4"/></linearGradient><filter id="gw" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
-E.forEach(([a,b],i)=>{const A=N[a],B=N[b],x1=A[1]+56,x2=B[1]-56,m=(x1+x2)/2,d=`M${x1} ${A[2]}C${m} ${A[2]} ${m} ${B[2]} ${x2} ${B[2]}`;h+=`<path class="ed" d="${d}"/><circle r="2.7" fill="#d6e6ff" filter="url(#gw)"><animateMotion dur="2.6s" begin="${(i*.37).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>`});
-N.forEach((n,i)=>h+=`<g class="n" tabindex="0"><rect x="${n[1]-56}" y="${n[2]-18}" width="112" height="36" rx="3"/><text x="${n[1]}" y="${n[2]+4}">${n[0]}</text></g>`);
-ps.innerHTML=h;const ns=$$('.n',ps);
-function sel(i){ns.forEach((n,j)=>n.classList.toggle('sel',i==j));$('#dt').textContent=N[i][0];$('#dd').textContent=N[i][3]}
-ns.forEach((n,i)=>['mouseenter','click','focus'].forEach(ev=>n.addEventListener(ev,()=>sel(i))));sel(0);
-$('#pf').addEventListener('reveal',()=>ns.forEach((n,i)=>setTimeout(()=>n.classList.add('on'),RM?0:i*220)));
+const N=[['Source',88,152,'Lua 5.1 and Luau, including type annotations and compound assignment.','input'],['Parse',271,152,'Builds a full syntax tree. Nothing is matched with patterns or regex.','syntax tree'],['Lower to IR',454,152,'Converts the tree to a typed intermediate form that every later pass shares.','typed IR'],['Rename',676,46,'Replaces identifiers with scoped, seed-derived names.','renamed symbols'],['Encrypt strings',676,152,'Encrypts literals at build time with a per-build key schedule.','encrypted literals'],['Flatten flow',676,258,'Routes basic blocks through a dispatcher with opaque state values.','dispatcher blocks'],['Bytecode',897,152,'Emits a custom instruction set with a shuffled opcode table.','custom opcodes'],['Runtime VM',1093,152,'A compact interpreter generated with the bytecode. Pure Luau, no native dependencies.','one .lua file']];
+const E=[[0,1],[1,2],[2,3],[2,4],[2,5],[3,6],[4,6],[5,6],[6,7]],ps=$('#psvg');let h='<defs><linearGradient id="eg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1190" y2="0"><stop offset="0" stop-color="#2a3550"/><stop offset="1" stop-color="#6a90c8"/></linearGradient><filter id="gw" x="-300%" y="-300%" width="700%" height="700%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+E.forEach(([a,b],i)=>{const A=N[a],B=N[b],x1=A[1]+71,x2=B[1]-71,m=(x1+x2)/2,d=`M${x1} ${A[2]}C${m} ${A[2]} ${m} ${B[2]} ${x2} ${B[2]}`;h+=`<path class="ed" d="${d}"/><circle class="pt" cx="${x1}" cy="${A[2]}" r="2.5"/><circle class="pt" cx="${x2}" cy="${B[2]}" r="2.5"/>`+(RM?'':`<circle r="2.7" fill="#d6e6ff" filter="url(#gw)"><animateMotion dur="2.6s" begin="${(i*.37).toFixed(2)}s" repeatCount="indefinite" path="${d}"/></circle>`)});
+N.forEach((n,i)=>h+=`<g class="n" tabindex="0" role="button" aria-label="${n[0]}"><rect x="${n[1]-71}" y="${n[2]-23}" width="142" height="46" rx="3"/><text x="${n[1]}" y="${n[2]+4.5}">${n[0]}</text></g>`);
+ps.innerHTML=h;const ns=$$('.n',ps);let auto=0,ai=0;
+function sel(i){ns.forEach((n,j)=>{n.classList.toggle('sel',i==j);n.setAttribute('aria-pressed',i==j)});$('#dt').textContent=N[i][0];$('#dd').textContent=N[i][3];$('#do').textContent=N[i][4];const dd=$('.det');dd.classList.remove('sw');void dd.offsetWidth;dd.classList.add('sw')}
+ns.forEach((n,i)=>{['mouseenter','click','focus'].forEach(ev=>n.addEventListener(ev,()=>{auto=-1;sel(ai=i)}));n.addEventListener('keydown',e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();auto=-1;sel(ai=i)}})});sel(0);
+setInterval(()=>{if(auto==1&&!document.hidden)sel(ai=(ai+1)%N.length)},2800);
+$('#pf').addEventListener('reveal',()=>{ns.forEach((n,i)=>setTimeout(()=>n.classList.add('on'),RM?0:i*220));if(!RM&&auto==0)setTimeout(()=>{if(auto==0)auto=1},2800)});
 /* ticker + build log */
 const tkn=Array.from({length:40},()=>`<span style="padding:0 20px">${hx(2)} <b style="font-weight:400;color:var(--ac)">${pk(OP)}</b> r${Math.random()*12|0}</span>`).join('');$('#tk').innerHTML=tkn+tkn;
 const RL=$('#rl'),sl=ms=>new Promise(r=>setTimeout(r,ms)),SL=['<span class=o>✓</span> parsed         212 lines','<span class=o>✓</span> lowered        184 IR blocks','<span class=o>✓</span> transformed    9 passes','<span class=o>✓</span> emitted        check.sing.lua · 14.2 kB','<b>seed 0x9e3a41c7</b> · built in 612 ms'];
 async function run(){const cmd='singularity build check.luau --level 3';do{let h='<b>$</b> ';RL.innerHTML=h;for(const c of cmd){h+=c;RL.innerHTML=h+'<u></u>';if(!RM)await sl(26)}h+='\n';for(const l of SL){if(!RM)await sl(430);h+=l+'\n';RL.innerHTML=h}if(RM)break;await sl(4200)}while(1)}run();
+const lk=$$('.links a'),so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)lk.forEach(a=>a.classList.toggle('on',a.getAttribute('href')=='#'+e.target.id))}),{rootMargin:'-45% 0px -50% 0px'});$$('main>section[id]').forEach(s=>so.observe(s));
+$$('details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)$$('details').forEach(o=>{if(o!==d)o.open=false})}));
 /* tradeoff bars */
 const M=[['Analysis effort (relative)',[22,61,100],['22','61','100']],['Runtime overhead',[15,44,100],['+6%','+18%','+41%']],['Output size',[27,56,100],['1.4×','2.9×','5.2×']]];
 $('#bm').innerHTML=M.map(m=>`<div class="bm"><span>${m[0]}</span>${m[1].map((v,i)=>`<div class="bl"><span>L${i+1}</span><i><u style="--v:${v}%"></u></i><span>${m[2][i]}</span></div>`).join('')}</div>`).join('');
@@ -203,4 +284,31 @@ for(let i=0;i<14;i++)pr+=`local ${nm()}=${nm()}(${nm()},0x${hh()})${i%4?';':'\n'
 $('#cq').textContent=pr;
 const cmp=$('#cmp'),rg=$('input',cmp),sp=v=>cmp.style.setProperty('--p',v+'%');rg.oninput=()=>sp(rg.value);sp(50);
 cmp.addEventListener('reveal',()=>{if(RM)return;const t0=performance.now();(function f(n){const p=Math.min(1,(n-t0)/1200),v=88-38*(1-Math.pow(1-p,3));rg.value=v;sp(v);if(p<1)requestAnimationFrame(f)})(t0)});
+
+/* polish: scroll progress, nav state, hero depth, card spotlight */
+(function(){const nav=$('nav'),sp=document.createElement('div'),hero=$('.hero');sp.className='sp';sp.setAttribute('aria-hidden','true');document.body.appendChild(sp);let q=0;
+const up=()=>{q=0;const y=scrollY,m=document.documentElement.scrollHeight-innerHeight;sp.style.setProperty('--sp',m>0?(y/m).toFixed(4):0);nav.classList.toggle('sc',y>8);if(!RM&&y<innerHeight*1.3){hero.style.setProperty('--hy',(y*.14).toFixed(1));hero.style.setProperty('--ho',Math.max(0,1-y/(innerHeight*.85)).toFixed(3))}};
+addEventListener('scroll',()=>{q||(q=requestAnimationFrame(up))},{passive:true});up();
+$('.bento').addEventListener('pointermove',e=>{const c=e.target.closest('.cell');if(!c)return;const r=c.getBoundingClientRect();c.style.setProperty('--mx',e.clientX-r.left+'px');c.style.setProperty('--my',e.clientY-r.top+'px')})})();
+
+/* cursor lens */
+(function(){if(RM||!matchMedia('(hover:hover)').matches)return;
+const cv=$('#lens'),x=cv.getContext('2d'),lb=$('#cur'),CS=15,R=170,G='0123456789ABCDEF';let W,H,D,cols,rows,ch,tx=-999,ty=-999,px=tx,py=ty,a=0,act=false,run=false,lt=0;
+const size=()=>{D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*D;cv.height=H*D;x.setTransform(D,0,0,D,0,0);cols=Math.ceil(W/CS);rows=Math.ceil(H/CS);ch=Array.from({length:cols*rows},()=>G[Math.random()*16|0])};size();addEventListener('resize',size);
+function fr(t){a+=((act?1:0)-a)*.09;px+=(tx-px)*.2;py+=(ty-py)*.2;x.clearRect(0,0,W,H);
+if(a>.01){const g=x.createRadialGradient(px,py,0,px,py,R*1.1);g.addColorStop(0,'rgba(190,215,255,'+.1*a+')');g.addColorStop(.45,'rgba(169,200,245,'+.035*a+')');g.addColorStop(1,'rgba(169,200,245,0)');x.fillStyle=g;x.fillRect(px-R*1.1,py-R*1.1,R*2.2,R*2.2);
+x.font='500 11px "Geist Mono",ui-monospace,monospace';x.textAlign='center';x.textBaseline='middle';
+const c0=Math.max(0,(px-R)/CS|0),c1=Math.min(cols-1,(px+R)/CS|0),r0=Math.max(0,(py-R)/CS|0),r1=Math.min(rows-1,(py+R)/CS|0),sw=(t/900)%(Math.PI*2);
+for(let r=r0;r<=r1;r++)for(let c=c0;c<=c1;c++){const cx=c*CS+CS/2,cy=r*CS+CS/2,dx=cx-px,dy=cy-py,d=Math.hypot(dx,dy);if(d>R)continue;let k=1-d/R;k*=k;
+const i=r*cols+c;if(Math.random()<k*.12)ch[i]=G[Math.random()*16|0];
+const ring=Math.exp(-Math.pow((d-(R*.55+Math.sin(sw)*R*.12))/18,2))*.55;
+const hc=Math.min(1,Math.max(0,(d-26)/40)),al=Math.min(1,(k*.4*hc+ring*.85))*a;if(al<.02)continue;
+x.fillStyle=(k>.55||ring>.35)?'rgba(235,244,255,'+al+')':'rgba(169,200,245,'+al*.8+')';x.fillText(ch[i],cx,cy)}
+x.beginPath();x.arc(px,py,2.2,0,6.283);x.fillStyle='rgba(235,244,255,'+.9*a+')';x.shadowColor='rgba(169,200,245,.9)';x.shadowBlur=14;x.fill();x.shadowBlur=0;
+lb.style.transform='translate('+(px+20)+'px,'+(py+18)+'px)'}
+if(a>.01||act)requestAnimationFrame(fr);else run=false}
+const go=()=>{if(!run){run=true;requestAnimationFrame(fr)}};
+addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;tx=e.clientX;ty=e.clientY;if(!act){px=tx;py=ty;act=true;lb.classList.add('on')}go();const n=performance.now();if(n-lt>420){lt=n;scr(lb,hx(2)+' '+pk(OP)+' r'+(Math.random()*12|0),380)}},{passive:true});
+document.documentElement.addEventListener('pointerleave',()=>{act=false;lb.classList.remove('on')});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){act=false;lb.classList.remove('on')}})})();
 </script></body></html>
